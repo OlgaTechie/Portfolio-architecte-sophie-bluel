@@ -62,8 +62,10 @@ function handleClickCategoryButton() {
     buttons.forEach((button) => {
         button.addEventListener("click", async (event) => {
             const categoryId = event.target.dataset.categoryId;
-            //retirer active className sur tous les boutons
-            //className active sur button
+
+            buttons.forEach((btn) => btn.classList.remove("active")); //Remove the 'active' class name from all buttons
+            
+            event.target.classList.add("active"); //Add className active on button
             getWorks(categoryId);
         });
     });
@@ -71,3 +73,13 @@ function handleClickCategoryButton() {
 
 getWorks();
 getCategories();
+
+document.addEventListener("DOMContentLoaded", function() {
+    const loginLink = document.getElementById("login-link");
+    if (loginLink) {
+        loginLink.addEventListener("click", function(event) {
+            event.preventDefault(); // Prevents the default behavior of the link
+            window.location.href = "login.html"; 
+        });
+    }
+});
