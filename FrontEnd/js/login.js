@@ -22,19 +22,17 @@ async function postLogin() {
         });
 
         // Processing the server response
-        handleServerResponse(response);
+        await handleResponse(response);
     } catch (error) {
         console.error("Une erreur s'est produite lors de la connexion :", error);
-        // Handling request errors
-        alert("Erreur de connexion");
     }
 }
 
-function handleServerResponse(response) {
+async function handleResponse(response) {
     if (response.ok) {
-        handleSuccessfulResponse(response);
+        await handleSuccessfulResponse(response);
     } else {
-        handleErrorResponse(response);
+        await handleErrorResponse(response);
     }
 } 
 
@@ -49,15 +47,22 @@ async function handleSuccessfulResponse(response) {
     } else {
         // Handle the case where the server response is invalid
         console.error("Réponse invalide du serveur");
-        alert("Réponse invalide du serveur");
+        showAlert("Réponse invalide du serveur");
     }
 }
 
 async function handleErrorResponse(response) {
     // Handle other cases of server response errors
-    console.error("Erreur de connexion :", response.status);
-    if (response.status === 404) {
-        alert("Erreur dans l’identifiant ou le mot de passe");
-    } 
+    const errorMessage = "Erreur dans l’identifiant ou le mot de passe";
+    showAlert(errorMessage);
 }
-    
+
+function showAlert(message) {
+    const errorParagraph = document.createElement("p");
+    errorParagraph.classList.add("error");
+    errorParagraph.textContent = message;
+
+    const errorContainer = document.getElementById("error-container");
+    errorContainer.innerHTML = "";
+    errorContainer.appendChild(errorParagraph);
+}

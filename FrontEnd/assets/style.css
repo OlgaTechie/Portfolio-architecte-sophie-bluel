@@ -220,6 +220,11 @@ input[type="submit"]{
 	border-radius: 60px ;
 }
 
+#error-container {
+	color: red;
+	font-weight: bold;
+}
+
 .password-forgot {
 	display: flex;
 	justify-content: center;
