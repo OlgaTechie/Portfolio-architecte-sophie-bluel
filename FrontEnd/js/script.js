@@ -76,10 +76,39 @@ getCategories();
 
 document.addEventListener("DOMContentLoaded", function() {
     const loginLink = document.getElementById("login-link");
-    if (loginLink) {
-        loginLink.addEventListener("click", function(event) {
-            event.preventDefault(); // Prevents the default behavior of the link
-            window.location.href = "login.html"; 
-        });
+    const logoutLink = document.getElementById("logout-link");
+    const editModeBanner = document.querySelector(".edit-mode-banner");
+    const categoriesMenu = document.querySelector(".categories-menu");
+    const projectOptions = document.querySelector(".project-options");
+
+    updateLinks();
+
+    // Gestionnaire d'événements pour le clic sur le bouton "logout"
+    logoutLink.addEventListener("click", function() {
+        localStorage.removeItem("token"); // Supprimez le token du localStorage
+        window.location.href = "index.html"; // Redirigez l'utilisateur vers la page d'accueil
+    });
+
+   function updateLinks() {
+        // Mettez à jour l'état de connexion lors du chargement de la page
+        if (isLoggedIn()) {
+            console.log("user is logged in");
+            logoutLink.classList.remove("hidden");
+            loginLink.classList.add("hidden");
+            editModeBanner.classList.remove("hidden");
+            categoriesMenu.classList.add("active");
+            projectOptions.classList.remove("hidden");
+        } else {
+            logoutLink.classList.add("hidden");
+            loginLink.classList.remove("hidden");
+            editModeBanner.classList.add("hidden");
+            categoriesMenu.classList.remove("active");
+            projectOptions.classList.add("hidden");
+        }
+   }
+
+     // Fonction pour vérifier si l'utilisateur est connecté
+     function isLoggedIn() {
+        return localStorage.getItem("token") !== null;
     }
 });
