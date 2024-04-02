@@ -96,14 +96,14 @@ document.addEventListener("DOMContentLoaded", function() {
             logoutLink.classList.remove("hidden");
             loginLink.classList.add("hidden");
             editModeBanner.classList.remove("hidden");
-            categoriesMenu.classList.add("active");
+            categoriesMenu.style.display = "none";
             projectOptions.classList.remove("hidden");
         } else {
             logoutLink.classList.add("hidden");
             loginLink.classList.remove("hidden");
             editModeBanner.classList.add("hidden");
             categoriesMenu.classList.remove("active");
-            projectOptions.classList.add("hidden");
+            projectOptions.style.display = "none";
         }
    }
 
@@ -114,7 +114,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     openModalButton.addEventListener("click", function(event) {
-        modal.style.display = "block";
+        modal.style.display = "flex";
     });
 
     window.addEventListener("click", function(event) {

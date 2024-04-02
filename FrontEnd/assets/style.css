@@ -139,6 +139,11 @@ li:hover {
 	display: none;
 }
 
+#login-link a {
+	color: black;
+	text-decoration: none;
+}
+
 .login-page {
 font-weight: bold;
 }
@@ -318,7 +323,7 @@ footer nav ul {
 }
 
 .modal {
-	display: flex;
+	display: none;
 	justify-content: center;
 	align-items: center;
 	position: fixed;
