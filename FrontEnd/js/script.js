@@ -77,20 +77,20 @@ getCategories();
 document.addEventListener("DOMContentLoaded", function() {
     const loginLink = document.getElementById("login-link");
     const logoutLink = document.getElementById("logout-link");
+
     const editModeBanner = document.querySelector(".edit-mode-banner");
+
     const categoriesMenu = document.querySelector(".categories-menu");
+
     const projectOptions = document.querySelector(".project-options");
+    const modal = document.getElementById("myModal");
+    const openModalButton = document.getElementById("openModal");
+    const closeModalButton = document.querySelector(".modal-close");
 
-    updateLinks();
-
-    // Gestionnaire d'événements pour le clic sur le bouton "logout"
-    logoutLink.addEventListener("click", function() {
-        localStorage.removeItem("token"); // Supprimez le token du localStorage
-        window.location.href = "index.html"; // Redirigez l'utilisateur vers la page d'accueil
-    });
+    updateLinks();  
 
    function updateLinks() {
-        // Mettez à jour l'état de connexion lors du chargement de la page
+        // Mettre à jour l'état de connexion lors du chargement de la page
         if (isLoggedIn()) {
             console.log("user is logged in");
             logoutLink.classList.remove("hidden");
@@ -107,8 +107,29 @@ document.addEventListener("DOMContentLoaded", function() {
         }
    }
 
-     // Fonction pour vérifier si l'utilisateur est connecté
-     function isLoggedIn() {
+     // Gestionnaire d'événements pour le clic sur le bouton "logout"
+     logoutLink.addEventListener("click", function() {
+        localStorage.removeItem("token"); // Supprimez le token du localStorage
+        window.location.href = "index.html"; 
+    });
+
+    openModalButton.addEventListener("click", function(event) {
+        modal.style.display = "block";
+    });
+
+    window.addEventListener("click", function(event) {
+        if(event.target == modal) {
+            modal.style.display = "none";
+        }
+    })
+
+    closeModalButton.addEventListener("click", function() {
+        modal.classList.add("hidden");
+    })
+
+    // Fonction pour vérifier si l'utilisateur est connecté
+    function isLoggedIn() {
         return localStorage.getItem("token") !== null;
     }
 });
+

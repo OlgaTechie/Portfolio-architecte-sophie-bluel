@@ -55,6 +55,11 @@ body {
 	font-size: 14px;
 }
 
+body .edit-mode-banner {
+	max-width: none;
+	width: 1500px;
+}
+
 header {
 	display: flex;
 	flex-direction: column;
@@ -93,7 +98,6 @@ h2{
 	color: white;
 	background-color: black;
 	text-align: center;
-	width: 100%;
 	padding: 20px;
 }
 
@@ -178,6 +182,8 @@ font-weight: bold;
 	justify-content: space-between;
 	padding: 10px;
 	margin-left: 20px;
+	color: black;
+	text-decoration: none;
 }
 
 .project-options i {
@@ -235,7 +241,8 @@ font-weight: bold;
 }
 
 #contact form,
-#login form {
+#login form,
+#myModal form {
 	text-align: left;
 	margin-top:30px;
 	display: flex;
@@ -245,6 +252,14 @@ font-weight: bold;
 #contact input,
 #login input {
 	height: 50px;
+	font-size: 1.2em;
+	border: none;
+	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+}
+
+#myModal input {
+	height: 50px;
+	width: 300px;
 	font-size: 1.2em;
 	border: none;
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
@@ -302,4 +317,43 @@ footer nav ul {
 	margin: 2em
 }
 
+.modal {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0,0,0,0.5);
+}
 
+.modal-content {
+	background-color: white;
+	padding: 20px;
+	width: 500px;
+	height: 550px;
+	border-radius: 10px;
+	overflow: auto;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.modal-close {
+	color: black;
+	font-weight: bold;
+	font-size: 18px;
+	align-self: flex-start;
+	margin-left: auto;
+}
+
+.modal-title {
+	font-size: 26px;
+	padding: 10px;
+}
+
+.modal .hidden {
+	display: none;
+}

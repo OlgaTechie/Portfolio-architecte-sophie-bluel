@@ -44,7 +44,16 @@
 	<section id="portfolio">
 		<div class="edit-projects">
 			<h2>Mes Projets</h2>
-			<div class="project-options"><i class="fa-solid fa-pen-to-square"></i>modifier</div>
+			<a href="#" class="project-options" id="openModal"><i class="fa-solid fa-pen-to-square"></i>modifier</a>
+			<aside id="myModal" class="modal" aria-hidden="true" role="dialog">
+				<div class="modal-content">
+					<span class="modal-close">&#10006;</span>
+					<h3 class="modal-title">Galerie photo</h3>
+					<form action="#" method="post">
+						<input type="submit" value="Ajouter une photo" id="modal-addition-button">
+					</form>
+				</div>
+			</aside>
 		</div>
 		<ul class="categories-menu"></ul>
 		<div class="gallery">
