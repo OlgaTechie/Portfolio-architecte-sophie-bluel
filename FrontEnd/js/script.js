@@ -1,9 +1,9 @@
-async function getWorks(categoryId = null) {
+async function getWorks(gallerySelector, categoryId = null) {
     const response = await fetch("http://localhost:5678/api/works");
     const data = await response.json();
     // console.log(data); // [{id:..., title:"...3"...}]
 
-    const gallery = document.querySelector(".gallery");
+    const gallery = document.querySelector(gallerySelector);
     gallery.innerHTML = "";
     
     data
@@ -18,13 +18,28 @@ async function getWorks(categoryId = null) {
         })
     
     .forEach((workItem) => {
+        console.log("Adding work to gallery");
         console.log(workItem.title);
+
         const figure = document.createElement("figure");
-        figure.innerHTML = `
-            <img src="${workItem.imageUrl}" alt="${workItem.title}">
-            <figcaption>${workItem.title}</figcaption>
-        `;
+        const img = document.createElement("img");
+        img.src = workItem.imageUrl;
+        img.alt = workItem.title;
+        figure.appendChild(img);
+
+        if (gallerySelector === ".modal-gallery") {
+            const deleteIcon = document.createElement("delete-icon");
+            deleteIcon.className = "fa-solid fa-trash-can";
+            figure.appendChild(deleteIcon);
+        }
+
+        const figcaption = document.createElement("figcaption");
+        figcaption.textContent = workItem.title;
+        figure.appendChild(figcaption);
+
         gallery.appendChild(figure);
+
+    
     });
 }
 
@@ -71,7 +86,7 @@ function handleClickCategoryButton() {
     });
 }
 
-getWorks();
+getWorks(".homepage-gallery");
 getCategories();
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -92,7 +107,6 @@ document.addEventListener("DOMContentLoaded", function() {
    function updateLinks() {
         // Mettre à jour l'état de connexion lors du chargement de la page
         if (isLoggedIn()) {
-            console.log("user is logged in");
             logoutLink.classList.remove("hidden");
             loginLink.classList.add("hidden");
             editModeBanner.classList.remove("hidden");
@@ -115,6 +129,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     openModalButton.addEventListener("click", function(event) {
         modal.style.display = "flex";
+        getWorks(".modal-gallery");
     });
 
     window.addEventListener("click", function(event) {
@@ -125,6 +140,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     closeModalButton.addEventListener("click", function() {
         modal.classList.add("hidden");
+        modal.style.display = "none";
     })
 
     // Fonction pour vérifier si l'utilisateur est connecté
