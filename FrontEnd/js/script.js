@@ -18,8 +18,8 @@ async function getWorks(gallerySelector, categoryId = null) {
         })
     
     .forEach((workItem) => {
-        console.log("Adding work to gallery");
-        console.log(workItem.title);
+        // console.log("Adding work to gallery");
+        // console.log(workItem.title);
 
         const figure = document.createElement("figure");
         const img = document.createElement("img");
@@ -28,8 +28,20 @@ async function getWorks(gallerySelector, categoryId = null) {
         figure.appendChild(img);
 
         if (gallerySelector === ".modal-gallery") {
-            const deleteIcon = document.createElement("delete-icon");
+            const deleteIcon = document.createElement("i");
             deleteIcon.className = "fa-solid fa-trash-can";
+            deleteIcon.setAttribute("data-work-id", workItem.id);
+            deleteIcon.addEventListener("click", async () => {
+                const confirmed = confirm("Voulez-vous vraiment supprimer cette image ?");
+                if(confirmed) {
+                    try {
+                        await deleteWork(workItem.id);
+                        figure.remove();
+                    } catch (error) {
+                        console.error("Une erreur est survenue lors de la suppression de l'image ");
+                    }
+                }
+            });
             figure.appendChild(deleteIcon);
         }
 
@@ -38,9 +50,28 @@ async function getWorks(gallerySelector, categoryId = null) {
         figure.appendChild(figcaption);
 
         gallery.appendChild(figure);
-
-    
     });
+}
+
+async function deleteWork(workId) {
+    const token = localStorage.getItem("token");
+    
+    if (!token) {
+        throw new Error("Token d'authentification non trouvé.");
+    }
+
+    const response = await fetch(`http://localhost:5678/api/works/${workId}`, {
+        method: 'DELETE',
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+            'Accept': 'application/json',
+        }
+    });
+
+    if (!response.ok) {
+        throw new Error("Erreur lors de la suppression de l'image");
+    } 
 }
 
 async function getCategories() {
@@ -123,13 +154,15 @@ document.addEventListener("DOMContentLoaded", function() {
 
      // Gestionnaire d'événements pour le clic sur le bouton "logout"
      logoutLink.addEventListener("click", function() {
-        localStorage.removeItem("token"); // Supprimez le token du localStorage
+        localStorage.removeItem("token"); // Supprimer le token du localStorage
         window.location.href = "index.html"; 
     });
 
     openModalButton.addEventListener("click", function(event) {
         modal.style.display = "flex";
         getWorks(".modal-gallery");
+        event.preventDefault();
+        displayModalWithImages();
     });
 
     window.addEventListener("click", function(event) {
@@ -147,5 +180,32 @@ document.addEventListener("DOMContentLoaded", function() {
     function isLoggedIn() {
         return localStorage.getItem("token") !== null;
     }
+
+    function displayModalWithImages() {
+        const modal = document.getElementById("myModal");
+        modal.style.display = "flex";
+        getWorks(".modal-gallery");
+        addDeleteImageEventListeners();
+    }
+
+    function addDeleteImageEventListeners() {
+        const deleteIcons = document.querySelectorAll(".modal-gallery i.fa-trash-can");
+        deleteIcons.forEach(deleteIcon => {
+            deleteIcon.addEventListener("click", async (event) => {
+                const confirmed = confirm("Voulez-vous vraiment supprimer cette image ?");
+                if (confirmed) {
+                    try {
+                        const workId = event.target.getAttribute("data-work-id");
+                        await deleteWork(workId);
+                        event.target.parentElemement.remove(); //figure
+                    } catch (error) {
+                        console.error("Une erreur est survenue lors de la suppression de l'image ");
+                    }
+                }
+            });
+        });
+    }
 });
+
+
 
