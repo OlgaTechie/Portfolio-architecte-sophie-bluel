@@ -5,8 +5,12 @@ async function getWorks(gallerySelector, categoryId = null) {
 
     const gallery = document.querySelector(gallerySelector);
     gallery.innerHTML = "";
+
+    const galleryErrorMessage = document.getElementById("gallery-error-message");
+    galleryErrorMessage.textContent = "";
     
-    data
+    try {
+        data
         .filter((work) => {
             if (!categoryId) {
                 return true;
@@ -17,40 +21,43 @@ async function getWorks(gallerySelector, categoryId = null) {
             return false;
         })
     
-    .forEach((workItem) => {
-        // console.log("Adding work to gallery");
-        // console.log(workItem.title);
+        .forEach((workItem) => {
+            // console.log("Adding work to gallery");
+            // console.log(workItem.title);
 
-        const figure = document.createElement("figure");
-        const img = document.createElement("img");
-        img.src = workItem.imageUrl;
-        img.alt = workItem.title;
-        figure.appendChild(img);
+            const figure = document.createElement("figure");
+            const img = document.createElement("img");
+            img.src = workItem.imageUrl;
+            img.alt = workItem.title;
+            figure.appendChild(img);
 
-        if (gallerySelector === ".modal-gallery") {
-            const deleteIcon = document.createElement("i");
-            deleteIcon.className = "fa-solid fa-trash-can";
-            deleteIcon.setAttribute("data-work-id", workItem.id);
-            deleteIcon.addEventListener("click", async () => {
-                const confirmed = confirm("Voulez-vous vraiment supprimer cette image ?");
-                if(confirmed) {
-                    try {
-                        await deleteWork(workItem.id);
-                        figure.remove();
-                    } catch (error) {
-                        console.error("Une erreur est survenue lors de la suppression de l'image ");
+            if (gallerySelector === ".modal-gallery") {
+                const deleteIcon = document.createElement("i");
+                deleteIcon.className = "fa-solid fa-trash-can";
+                deleteIcon.setAttribute("data-work-id", workItem.id);
+                deleteIcon.addEventListener("click", async () => {
+                    const confirmed = confirm("Voulez-vous vraiment supprimer cette image ?");
+                    if(confirmed) {
+                        try {
+                            await deleteWork(workItem.id);
+                            figure.remove();
+                        } catch (error) {
+                            galleryErrorMessage.textContent = "Une erreur est survenue lors de la suppression de l'image";
+                        }
                     }
-                }
-            });
-            figure.appendChild(deleteIcon);
-        }
+                });
+                figure.appendChild(deleteIcon);
+            }
 
-        const figcaption = document.createElement("figcaption");
-        figcaption.textContent = workItem.title;
-        figure.appendChild(figcaption);
+            const figcaption = document.createElement("figcaption");
+            figcaption.textContent = workItem.title;
+            figure.appendChild(figcaption);
 
-        gallery.appendChild(figure);
-    });
+            gallery.appendChild(figure);
+        });
+    } catch (error) {
+        galleryErrorMessage.textContent = "Une erreur est survenue lors du chargement de la galerie d'images";
+    }
 }
 
 async function deleteWork(workId) {
@@ -78,6 +85,9 @@ async function getCategories() {
     const menu = document.querySelector(".categories-menu");
     menu.innerHTML = "";
 
+    const categoriesErrorMessage = document.getElementById("categories-error-message");
+    categoriesErrorMessage.textContent = "";
+
     try {
         const response = await fetch("http://localhost:5678/api/categories");
         if (!response.ok) {
@@ -99,7 +109,7 @@ async function getCategories() {
 
         handleClickCategoryButton();
     } catch (error) {
-        console.error("An error occurred in getCategories:", error);
+        categoriesErrorMessage.textContent = "Une erreur est survenue lors du chargement des catégories";
     }
 }
 
@@ -190,6 +200,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function addDeleteImageEventListeners() {
         const deleteIcons = document.querySelectorAll(".modal-gallery i.fa-trash-can");
+        const deleteImageErrorMessage = document.getElementById("delete-image-error-message");
+        deleteImageErrorMessage.textContent = "";
+
         deleteIcons.forEach(deleteIcon => {
             deleteIcon.addEventListener("click", async (event) => {
                 const confirmed = confirm("Voulez-vous vraiment supprimer cette image ?");
@@ -197,15 +210,88 @@ document.addEventListener("DOMContentLoaded", function() {
                     try {
                         const workId = event.target.getAttribute("data-work-id");
                         await deleteWork(workId);
-                        event.target.parentElemement.remove(); //figure
+                        event.target.parentElement.remove(); //figure
                     } catch (error) {
-                        console.error("Une erreur est survenue lors de la suppression de l'image ");
+                        deleteImageErrorMessage.textContent = "Une erreur est survenue lors de la suppression de l'image ";
                     }
                 }
             });
         });
     }
+
+    const uploadForm = document.getElementById("upload-form");
+    if (uploadForm) {
+        uploadForm.addEventListener("submit", async function(event) {
+            event.preventDefault();
+            console.log("Formulaire soumis!");
+        });
+    } else {
+        const uploadFormErrorMessage = document.getElementById("upload-form-error-message");
+        uploadFormErrorMessage.textContent = "Formulaire non-trouvé";
+    }
 });
 
+document.querySelector(".modal-addition-button").addEventListener("click", function(event) {
+    event.preventDefault();
+    console.log("Le bouton 'Ajouter une photo' a été cliqué !");
 
+    document.querySelector(".modal-photo-gallery").classList.add("hidden");
+    document.querySelector(".modal-add-photo").classList.remove("hidden");
+});
+
+const arrowLeftLink = document.querySelector(".modal-add-photo-container a");
+
+arrowLeftLink.addEventListener("click", function(event) {
+    event.preventDefault();
+
+    // Sélection de la vue actuelle et de la vue précédente
+    const addPhotoView = document.querySelector(".modal-add-photo");
+    const photoGalleryView = document.querySelector(".modal-photo-gallery");
+
+    addPhotoView.classList.add("hidden");
+    photoGalleryView.classList.remove("hidden");
+})
+
+async function postWorks(formData) {
+    try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            throw new Error("Token d'authentification non trouvé")
+        }
+
+        const response = await fetch("http://localhost:5678/api/works", {
+            method: "POST",
+            body: formData,
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem("token")}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error("Failed to add new photo");
+        }
+
+        console.log("La photo a été téléchargée avec succès");
+        getWorks(".homepage-gallery");
+    } catch (error) {
+        const errorMessage = document.getElementById("error-message-photo");
+        errorMessage.textContent = error.message;
+    }
+}
+
+document.getElementById("upload-form").addEventListener("submit", async function(event) {
+    event.preventDefault();
+    console.log("Formulaire soumis !");
+
+    const formData = new FormData()
+    const fileInput = document.getElementById("upload-photo");
+    const titleInput = document.getElementById("photo-title");
+    const categoryInput = document.getElementById("photo-category");
+
+    formData.append("image", fileInput.files[0]); // Ajouter le fichier sélectionné à FormData
+    formData.append("title", titleInput.value); // Ajouter le titre à FormData
+    formData.append("category", categoryInput.value);
+    
+    await postWorks(formData);
+});
 

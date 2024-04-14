@@ -47,20 +47,53 @@
 			<a href="#" class="project-options" id="openModal"><i class="fa-solid fa-pen-to-square"></i>modifier</a>
 			<aside id="myModal" class="modal" aria-hidden="true" role="dialog">
 				<div class="modal-content">
-					<button class="modal-close">&times;</button>
-					<h3 class="modal-title">Galerie photo</h3>
-					<div class="modal-gallery-wrapper">
-						<div class="modal-gallery gallery"></div>
+					<div class="modal-photo-gallery">
+						<p id="delete-image-error-message" class="error-message"></p>
+						<button class="modal-close">&times;</button>
+						<h3 class="modal-title">Galerie photo</h3>
+						<div class="modal-gallery-wrapper">
+							<div class="modal-gallery gallery"></div>
+						</div>
+						<hr class="modal-line" id="gallery-line">
+						<button class="modal-addition-button">Ajouter une photo</button>
 					</div>
-					<hr class="modal-line" id="gallery-line">
-					<form action="#" method="post">
-						<input type="submit" value="Ajouter une photo" id="modal-addition-button">
-					</form>
+					<div class="modal-add-photo hidden">
+						<div class="modal-add-photo-container">
+							<a href="#"><i class="fa-solid fa-arrow-left"></i></a>
+							<button class="modal-close">&times;</button>
+							<p id="error-message-photo" class="error-message"></p>
+						</div>
+						<h3 class="modal-title">Ajout photo</h3>
+						<form id="upload-form" method="post" enctype="multipart/form-data">
+							<div class="file-input-wrapper">
+								<input type="file" id="upload-photo" accept="image/*">
+								<label for="upload-photo" class="file-input-label">
+									<i class="fa-regular fa-image"></i>
+									<button class="upload-photo-button">+ Ajouter photo</button>
+									<p class="upload-photo-info">jpg, png : 4mo max</p>
+								</label>
+							</div>
+							<label for="photo-title" class="label-title-modal">Titre</label>
+							<input type="text" id="photo-title">
+							<label for="photo-category" class="label-title-modal">Catégorie</label>
+							<select id="photo-category">
+								<option value="" selected></option>
+								<option value="1">Objets</option>
+								<option value="2">Appartements</option>
+								<option value="3">Hotels & restaurants</option>
+							</select>
+							<hr class="modal-line" id="gallery-line">
+							<button type="submit" class="add-photo-button" id="add-photo-button">Valider</button>
+							<p id="upload-form-error-message" class="error-message"></p>
+							<p id="gallery-error-message" class="error-message"></p>
+						</form>
+					</div>
 				</div>
 			</aside>
 		</div>
 		<ul class="categories-menu"></ul>
 		<div class="gallery homepage-gallery">
+			<p id="categories-error-message" class="error-message"></p>
 			<!--<figure>
 				<img src="assets/images/abajour-tahina.png" alt="Abajour Tahina">
 				<figcaption>Abajour Tahina</figcaption>
