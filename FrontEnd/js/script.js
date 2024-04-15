@@ -64,7 +64,7 @@ async function deleteWork(workId) {
     const token = localStorage.getItem("token");
     
     if (!token) {
-        throw new Error("Token d'authentification non trouvé.");
+        throw new Error("Token d'authentification non trouvé");
     }
 
     const response = await fetch(`http://localhost:5678/api/works/${workId}`, {
@@ -120,9 +120,9 @@ function handleClickCategoryButton() {
             const categoryId = event.target.dataset.categoryId;
 
             buttons.forEach((btn) => btn.classList.remove("active")); //Remove the 'active' class name from all buttons
-            
             event.target.classList.add("active"); //Add className active on button
-            getWorks(categoryId);
+            
+            getWorks(".homepage-gallery", categoryId);
         });
     });
 }
@@ -145,7 +145,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     updateLinks();  
 
-   function updateLinks() {
+    function updateLinks() {
         // Mettre à jour l'état de connexion lors du chargement de la page
         if (isLoggedIn()) {
             logoutLink.classList.remove("hidden");
@@ -162,8 +162,8 @@ document.addEventListener("DOMContentLoaded", function() {
         }
    }
 
-     // Gestionnaire d'événements pour le clic sur le bouton "logout"
-     logoutLink.addEventListener("click", function() {
+    // Gestionnaire d'événements pour le clic sur le bouton "logout"
+    logoutLink.addEventListener("click", function() {
         localStorage.removeItem("token"); // Supprimer le token du localStorage
         window.location.href = "index.html"; 
     });
@@ -196,6 +196,25 @@ document.addEventListener("DOMContentLoaded", function() {
         modal.style.display = "flex";
         getWorks(".modal-gallery");
         addDeleteImageEventListeners();
+
+        // Gestionnaire d'événements pour le changement d'état du champ de fichier
+        const fileInput = document.getElementById("upload-photo");
+        const fileInputLabel = document.querySelector(".file-input-label");
+        const imagePreview = document.getElementById("image-preview");
+        const fileInputWrapper = document.querySelector(".file-input-wrapper");
+
+        fileInput.addEventListener("change", function(event) {
+            const selectedImage = event.target.files[0]; // Récupérer l'image sélectionnée par l'utilisateur
+            
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                imagePreview.src = event.target.result;
+                imagePreview.style.display = "block";
+            };
+            reader.readAsDataURL(selectedImage);
+
+            fileInputWrapper.appendChild(imagePreview);
+        });
     }
 
     function addDeleteImageEventListeners() {
@@ -233,7 +252,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 document.querySelector(".modal-addition-button").addEventListener("click", function(event) {
     event.preventDefault();
-    console.log("Le bouton 'Ajouter une photo' a été cliqué !");
+    // console.log("Le bouton 'Ajouter une photo' a été cliqué !");
 
     document.querySelector(".modal-photo-gallery").classList.add("hidden");
     document.querySelector(".modal-add-photo").classList.remove("hidden");

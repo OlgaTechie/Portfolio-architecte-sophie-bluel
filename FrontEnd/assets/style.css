@@ -460,6 +460,13 @@ footer nav ul {
 	width: 500px;
 }
 
+#image-preview {
+	max-width: 100%;
+	max-height: 100px;
+	height: auto;
+	display: none;
+}
+
 .file-input-wrapper {
 	display: inline-block;
 	overflow: hidden;
