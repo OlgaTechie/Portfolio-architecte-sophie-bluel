@@ -430,7 +430,7 @@ footer nav ul {
 .modal-addition-button {
 	font-size: 14px;
 	color: #FFFFFF;
-	font-family: Syne;
+	font-family: 'Syne';
 	background-color: #1D6154;
 	border: none;
 	border-radius: 60px;
@@ -458,13 +458,17 @@ footer nav ul {
 
 #upload-form {
 	width: 500px;
+	margin: auto;
 }
 
 #image-preview {
-	max-width: 100%;
-	max-height: 100px;
-	height: auto;
-	display: none;
+	position: absolute;
+	top: 0;
+	left: 50%;
+	transform: translate(-50%, 0);
+	width: 50%;
+	height: 86%;
+	object-fit: cover;
 }
 
 .file-input-wrapper {
@@ -544,12 +548,17 @@ footer nav ul {
 .add-photo-button {
 	color: #FFFFFF;
 	background-color: #A7A7A7;
-	font-family: Syne;
+	font-family: 'Syne';
 	font-size: 14px;
 	font-weight: 700;
-	padding: 10px 90px;
+	padding: 10px 20px;
 	border: none;
 	border-radius: 60px;
-	margin: 20px;
+	margin: 20px auto;
 	cursor: pointer;
+	width: 280px;
+}
+
+.valid-button {
+	background-color: #1D6154;
 }

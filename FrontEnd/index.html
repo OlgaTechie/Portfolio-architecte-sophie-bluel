@@ -61,9 +61,11 @@
 						<div class="modal-add-photo-container">
 							<a href="#"><i class="fa-solid fa-arrow-left"></i></a>
 							<button class="modal-close">&times;</button>
-							<p id="error-message-photo" class="error-message"></p>
 						</div>
 						<h3 class="modal-title">Ajout photo</h3>
+						<div id="error-container">
+							<p id="error-message-photo" class="error-message"></p>
+						</div>
 						<form id="upload-form" method="post" enctype="multipart/form-data">
 							<div class="file-input-wrapper">
 								<img id="image-preview" src="" alt="Image preview">
@@ -84,9 +86,7 @@
 								<option value="3">Hotels & restaurants</option>
 							</select>
 							<hr class="modal-line" id="gallery-line">
-							<button type="submit" class="add-photo-button" id="add-photo-button">Valider</button>
-							<p id="upload-form-error-message" class="error-message"></p>
-							<p id="gallery-error-message" class="error-message"></p>
+							<button class="add-photo-button valid-button" id="add-photo-button">Valider</button>
 						</form>
 					</div>
 				</div>
@@ -94,7 +94,6 @@
 		</div>
 		<ul class="categories-menu"></ul>
 		<div class="gallery homepage-gallery">
-			<p id="categories-error-message" class="error-message"></p>
 			<!--<figure>
 				<img src="assets/images/abajour-tahina.png" alt="Abajour Tahina">
 				<figcaption>Abajour Tahina</figcaption>
@@ -163,6 +162,8 @@
 		</ul>
 	</nav>
 </footer>
-<script src="./js/script.js"></script>
+<script src="./js/api-functions.js" type="module"></script>
+<script src="./js/script.js" type="module"></script>
+<script src="./js/user.js"></script>
 </body>
 </html>
