@@ -1,7 +1,6 @@
 export async function getWorks(gallerySelector, categoryId = null) {
     const response = await fetch("http://localhost:5678/api/works");
     const data = await response.json();
-    // console.log(data); // [{id:..., title:"...3"...}]
 
     const gallery = document.querySelector(gallerySelector);
     gallery.innerHTML = "";
@@ -16,6 +15,7 @@ export async function getWorks(gallerySelector, categoryId = null) {
             }
             return false;
         })
+        
     
         .forEach((workItem) => {
             // console.log("Adding work to gallery");
@@ -85,8 +85,10 @@ export async function postWorks(formData) {
             }
         });
 
+        const responseData = await response.json();
+
         if (!response.ok) {
-            throw new Error("Veuillez remplir tous les champs du formulaire avant de valider");
+            throw new Error(responseData.message || "Une erreur s'est produite lors de la validation du formulaire");
         }
 
         getWorks(".homepage-gallery");

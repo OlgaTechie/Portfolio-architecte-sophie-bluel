@@ -14,18 +14,14 @@ async function postLogin() {
         password: password
     });
 
-    try {
-        const response = await fetch ("http://localhost:5678/api/users/login", {
+    const response = await fetch ("http://localhost:5678/api/users/login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: requestBody
         });
 
-        // Processing the server response
-        await handleResponse(response);
-    } catch (error) {
-        console.error("Une erreur s'est produite lors de la connexion :", error);
-    }
+    // Processing the server response
+    await handleResponse(response);
 }
 
 async function handleResponse(response) {
@@ -39,19 +35,13 @@ async function handleResponse(response) {
 async function handleSuccessfulResponse(response) {
     const responseData = await response.json(); // If the response is successful, retrieve the JSON data from the response
     // If the response contains an authentication token and a user ID
-    if (responseData.token && responseData.userId) {
-        // Store the authentication token and user ID in local storage (localStorage)
-        localStorage.setItem("token", responseData.token);
-        localStorage.setItem("userId", responseData.userId);
-        window.location.href = "index.html";
-    } else {
-        // Handle the case where the server response is invalid
-        console.error("Réponse invalide du serveur");
-        showAlert("Réponse invalide du serveur");
-    }
+    // Store the authentication token and user ID in local storage (localStorage)
+    localStorage.setItem("token", responseData.token);
+    localStorage.setItem("userId", responseData.userId);
+    window.location.href = "index.html";
 }
 
-async function handleErrorResponse(response) {
+async function handleErrorResponse() {
     // Handle other cases of server response errors
     const errorMessage = "Erreur dans l’identifiant ou le mot de passe";
     showAlert(errorMessage);

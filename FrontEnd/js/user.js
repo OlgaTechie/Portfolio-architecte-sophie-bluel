@@ -1,4 +1,4 @@
-// Fonction pour vérifier si l'utilisateur est connecté
+// Function to check if the user is logged in
 function isLoggedIn() {
     return localStorage.getItem("token") !== null;
 }
@@ -15,7 +15,7 @@ const projectOptions = document.querySelector(".project-options");
 updateLinks();  
 
 function updateLinks() {
-    // Mettre à jour l'état de connexion lors du chargement de la page
+    // Update the login state upon page load
     if (isLoggedIn()) {
         logoutLink.classList.remove("hidden");
         loginLink.classList.add("hidden");
@@ -31,8 +31,8 @@ function updateLinks() {
     }
 }
 
-// Gestionnaire d'événements pour le clic sur le bouton "logout"
+// Event handler for the click on the "logout" button
 logoutLink.addEventListener("click", function() {
-    localStorage.removeItem("token"); // Supprimer le token du localStorage
+    localStorage.removeItem("token"); // Remove the token from localStorage
     window.location.href = "index.html"; 
 });
