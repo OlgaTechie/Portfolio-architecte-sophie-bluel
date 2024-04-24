@@ -1,10 +1,15 @@
+// Utilisation de JavaScript pour récupérer dynamiquement les travaux
 export async function getWorks(gallerySelector, categoryId = null) {
+    // Appel à l'API avec fetch pour récupérer les données des travaux
     const response = await fetch("http://localhost:5678/api/works");
     const data = await response.json();
 
+    // Sélection de la galerie où les travaux seront affichés
     const gallery = document.querySelector(gallerySelector);
+    // Nettoyage de tout contenu HTML préexistant dans la galerie
     gallery.innerHTML = "";
     
+    // Filtrage des travaux en fonction de la catégorie spécifiée, le cas échéant
     data
         .filter((work) => {
             if (!categoryId) {
@@ -16,11 +21,9 @@ export async function getWorks(gallerySelector, categoryId = null) {
             return false;
         })
         
-    
+        // Ajout dynamique des travaux récupérés à la galerie
         .forEach((workItem) => {
-            // console.log("Adding work to gallery");
-            // console.log(workItem.title);
-
+            // Création dynamique des éléments HTML pour afficher les travaux
             const figure = document.createElement("figure");
             const img = document.createElement("img");
             img.src = workItem.imageUrl;
@@ -28,6 +31,7 @@ export async function getWorks(gallerySelector, categoryId = null) {
             figure.appendChild(img);
 
             if (gallerySelector === ".modal-gallery") {
+                // Ajout d'une icône de suppression pour les travaux dans la galerie modale
                 const deleteIcon = document.createElement("i");
                 deleteIcon.className = "fa-solid fa-trash-can";
                 deleteIcon.setAttribute("data-work-id", workItem.id);
@@ -42,6 +46,7 @@ export async function getWorks(gallerySelector, categoryId = null) {
             figcaption.textContent = workItem.title;
             figure.appendChild(figcaption);
 
+            // Ajout des éléments à la galerie
             gallery.appendChild(figure);
         });
 }
@@ -59,8 +64,9 @@ export async function deleteWork(workId) {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${token}`,
             'Accept': 'application/json',
-        }
+        },
     });
+    getWorks(".homepage-gallery");
 }
 
 export async function postWorks(formData) {
@@ -82,7 +88,7 @@ export async function postWorks(formData) {
             body: formData,
             headers: {
                 "Authorization": `Bearer ${localStorage.getItem("token")}`
-            }
+            },
         });
 
         const responseData = await response.json();

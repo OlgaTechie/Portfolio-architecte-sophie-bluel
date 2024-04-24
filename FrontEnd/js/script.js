@@ -1,41 +1,47 @@
 import { getWorks, postWorks, deleteWork } from "./api-functions.js";
 
+// Utilisation de JavaScript pour récupérer dynamiquement les catégories disponibles depuis l'API
 async function getCategories() {
     const menu = document.querySelector(".categories-menu");
     menu.innerHTML = "";
 
+    // Envoi d'une requête à l'API pour récupérer les catégories
     const response = await fetch("http://localhost:5678/api/categories");
     const categories = await response.json();
 
+     // Création d'un bouton "Tous" pour afficher tous les travaux
     const allFilter = document.createElement("button");
     allFilter.textContent = "Tous"; // set the text content of allFilter button to "Tous"
     menu.appendChild(allFilter);
 
+    // Création d'un bouton pour chaque catégorie récupérée depuis l'API
     categories.forEach((category) => {
-        console.log(category);
         const filter = document.createElement("button");
-        filter.textContent = category.name; //  set the text content of the filter button to the name of the category
-        filter.dataset.categoryId = category.id; // the attribute data-category-id to store the category ID
+        filter.textContent = category.name; // Nom de la catégorie
+        filter.dataset.categoryId = category.id; // ID de la catégorie
         menu.appendChild(filter);
     });
 
+    // Ajout d'un gestionnaire d'événements pour chaque bouton de catégorie
     handleClickCategoryButton();
 }
 
+// Gestion de clic sur les boutons de catégorie
 function handleClickCategoryButton() {
     const buttons = document.querySelectorAll(".categories-menu button");
     buttons.forEach((button) => {
         button.addEventListener("click", async (event) => {
             const categoryId = event.target.dataset.categoryId;
 
-            buttons.forEach((btn) => btn.classList.remove("active")); //Remove the 'active' class name from all buttons
-            event.target.classList.add("active"); //Add className active on button
+            buttons.forEach((btn) => btn.classList.remove("active")); // Suppression de la classe "active" de tous les boutons
+            event.target.classList.add("active"); // Ajout de la classe "active" sur le bouton cliqué
             
-            getWorks(".homepage-gallery", categoryId);
+            getWorks(".homepage-gallery", categoryId); // Filtrage des travaux en fonction de la catégorie sélectionnée
         });
     });
 }
 
+// Appel initial pour récupérer les travaux et les catégories lors du chargement de la page
 getWorks(".homepage-gallery");
 getCategories();
 
@@ -74,6 +80,16 @@ function closeModalWithAnimation() {
         modal.classList.remove("fade-out");
     }, 300);
 }
+
+function goBackModal() {
+    // Selecting the current view and the previous view
+    const addPhotoView = document.querySelector(".modal-add-photo");
+    const photoGalleryView = document.querySelector(".modal-photo-gallery");
+
+    addPhotoView.classList.add("hidden");
+    photoGalleryView.classList.remove("hidden");
+}
+
     
 // Function to display the modal with images
 function displayModalWithImages() {
@@ -144,6 +160,8 @@ addButton.addEventListener("click", async function(event) {
             formData.append("category", categoryInput.value.trim());
             
             await postWorks(formData);
+            closeModalWithAnimation();
+            goBackModal();
         } else {
             throw new Error("Veuillez remplir tous les champs du formulaire avant de valider");
         }
@@ -173,10 +191,5 @@ const arrowLeftLink = document.querySelector(".modal-add-photo-container a");
 arrowLeftLink.addEventListener("click", function(event) {
     event.preventDefault();
 
-    // Selecting the current view and the previous view
-    const addPhotoView = document.querySelector(".modal-add-photo");
-    const photoGalleryView = document.querySelector(".modal-photo-gallery");
-
-    addPhotoView.classList.add("hidden");
-    photoGalleryView.classList.remove("hidden");
-})
+    goBackModal();
+});
