@@ -51,54 +51,69 @@ export async function getWorks(gallerySelector, categoryId = null) {
         });
 }
 
+// Fonction pour supprimer un travail de la galerie
 export async function deleteWork(workId) {
+    // Récupération du jeton d'authentification depuis le stockage local
     const token = localStorage.getItem("token");
     
+    // Vérification de l'existence du jeton d'authentification
     if (!token) {
+        // Si le jeton n'est pas trouvé, une erreur est levée
         throw new Error("Token d'authentification non trouvé");
     }
 
+    // Envoi d'une requête DELETE au serveur pour supprimer le travail spécifié
     const response = await fetch(`http://localhost:5678/api/works/${workId}`, {
         method: 'DELETE',
         headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`,
+            "Authorization": `Bearer ${token}`, // Ajout du jeton d'authentification dans les en-têtes
             'Accept': 'application/json',
         },
     });
+
+    // Actualisation de la galerie après la suppression du travail
     getWorks(".homepage-gallery");
 }
 
+// Envoyer les données du nouveau travail au serveur pour ajout
 export async function postWorks(formData) {
     try {
+        // Vérifier si le token d'authentification est présent dans le stockage local
         const token = localStorage.getItem("token");
         if (!token) {
             throw new Error("Token d'authentification non trouvé")
         }
 
+        // Récupérer le titre et la catégorie du formulaire de données
         const title = formData.get("title");
         const category = formData.get("category");
 
+        // Vérifier si le titre et la catégorie sont fournis
         if (!title || !category) {
             throw new Error("Veuillez remplir tous les champs du formulaire avant de valider");
         }
 
+        // Envoyer les données du formulaire au serveur via une requête POST
         const response = await fetch("http://localhost:5678/api/works", {
-            method: "POST",
-            body: formData,
+            method: "POST", // Méthode de la requête
+            body: formData, // Corps de la requête contenant les données du formulaire
             headers: {
-                "Authorization": `Bearer ${localStorage.getItem("token")}`
+                "Authorization": `Bearer ${localStorage.getItem("token")}` // Ajout du jeton d'authentification dans les en-têtes
             },
         });
 
+        // Analyser la réponse JSON renvoyée par le serveur
         const responseData = await response.json();
 
         if (!response.ok) {
             throw new Error(responseData.message || "Une erreur s'est produite lors de la validation du formulaire");
         }
 
+        // Mettre à jour la galerie pour afficher le nouveau travail ajouté
         getWorks(".homepage-gallery");
     } catch (error) {
+        // En cas d'erreur, afficher le message d'erreur dans l'élément avec l'ID "error-message-photo"
         const errorMessage = document.getElementById("error-message-photo");
         errorMessage.textContent = error.message;
     }
